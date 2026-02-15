@@ -7,6 +7,8 @@ services:
     volumes:
       - ./app:/var/www/app
     working_dir: /var/www/app
+    depends_on:
+      - azurite
   
   nginx:
     image: nginx:stable-alpine
@@ -17,3 +19,13 @@ services:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - php
+        
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    ports:
+      - '10000:10000'
+    volumes:
+      - azurite-data:/data
+
+volumes:
+  azurite-data:
