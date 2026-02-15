@@ -52,3 +52,6 @@ app/vendor/
 /.web-server-pid
 
 /.idea
+
+# Symfony env
+app/.env.local
