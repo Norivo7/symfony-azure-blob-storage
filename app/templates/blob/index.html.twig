@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Blob Storage{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+        <div class="header">
+            <div class="title">
+                <h1>Azure Blob Storage</h1>
+                <p>Local development powered by <span class="mono">Azurite</span>. Upload, list, and download blobs.</p>
+            </div>
+            <div class="badge">Symfony • PHP • Azure SDK</div>
+        </div>
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash {{ label }}">
+                    <div class="tag">{{ label|upper }}</div>
+                    <div>{{ message }}</div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Browse & Upload</h2>
+                <div class="pill">
+                    <span>Endpoint:</span>
+                    <span class="kbd">/</span>
+                    <span>•</span>
+                    <span>Download:</span>
+                    <span class="kbd">/download/{blobName}</span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="grid">
+                    <form method="get" action="{{ path('blob_index') }}" class="field">
+                        <div class="label">Prefix (optional “folder”)</div>
+                        <div class="row">
+                            <input class="input" name="prefix" value="{{ prefix }}" placeholder="e.g. invoices/2026" />
+                            <button class="btn btn-ghost" type="submit">Filter</button>
+                        </div>
+                        <div class="label">Tip: leave empty to list everything</div>
+                    </form>
+
+                    <form method="post" enctype="multipart/form-data" class="field">
+                        <div class="label">Upload file</div>
+                        <div class="row">
+                            <input class="file" type="file" name="file" required />
+                            <button class="btn btn-primary" type="submit">Upload</button>
+                        </div>
+                        <div class="label">Files are stored as blobs in the configured container.</div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card-body" style="padding-top: 0;">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th class="right">Size</th>
+                        <th>Last modified</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for b in blobs %}
+                        <tr>
+                            <td class="mono">{{ b.name }}</td>
+                            <td class="right">{{ b.size ?? '-' }}</td>
+                            <td>{{ b.lastModified ? b.lastModified|date('Y-m-d H:i:s') : '-' }}</td>
+                            <td class="actions">
+                                <a href="{{ path('blob_download', { blobName: b.name }) }}">⬇ Download</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" style="color: rgba(232,238,252,0.75);">No blobs found.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
