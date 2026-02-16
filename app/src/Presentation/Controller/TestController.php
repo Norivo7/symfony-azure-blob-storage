@@ -1,26 +1,28 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Presentation\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Application\ListBlobs;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-class TestController extends AbstractController
+final class TestController
 {
-    #[Route('/test', name: 'app_test')]
-    public function index(): JsonResponse
+    #[Route('/health/storage', name: 'health_storage', methods: ['GET'])]
+    public function storage(ListBlobs $listBlobs): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/TestController.php',
-        ]);
-    }
+        $blobs = $listBlobs('');
 
-    #[Route('/', name: 'home')]
-    public function home(): Response
-    {
-        return $this->render('base.html.twig');
+        $names = [];
+        foreach ($blobs as $blob) {
+            $names[] = $blob->name;
+        }
+
+        return new JsonResponse([
+            'ok' => true,
+            'count' => count($blobs),
+            'blobs' => $names,
+        ]);
     }
 }
