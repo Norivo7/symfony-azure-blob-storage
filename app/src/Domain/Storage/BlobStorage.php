@@ -6,9 +6,12 @@ namespace App\Domain\Storage;
 
 interface BlobStorage
 {
+    /** @return list<BlobItem> */
     public function list(string $prefix = ''): array;
 
     public function upload(string $blobName, string $localPath, string $contentType): void;
 
     public function download(string $blobName): array;
+
+    public function delete(string $blobName): void;
 }

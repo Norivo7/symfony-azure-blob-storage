@@ -84,4 +84,17 @@ final readonly class AzureBlobStorage implements BlobStorage
             'contentLength' => $props?->getContentLength(),
         ];
     }
+
+    public function delete(string $blobName): void
+    {
+        try {
+            $this->client->deleteBlob($this->container, $blobName);
+        } catch (ServiceException $exception) {
+            if ($exception->getCode() === Response::HTTP_NOT_FOUND) {
+                throw new BlobNotFound("Blob not found: {$blobName}", 404, $exception);
+            }
+            throw $exception;
+        }
+    }
+
 }

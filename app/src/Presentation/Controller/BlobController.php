@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Presentation\Controller;
 
+use App\Application\DeleteBlob;
 use App\Application\DownloadBlob;
 use App\Application\ListBlobs;
 use App\Application\UploadBlob;
 use App\Domain\Storage\Exception\BlobNotFound;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -68,5 +70,19 @@ final class BlobController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($blobName).'"');
 
         return $response;
+    }
+
+
+    #[Route('/delete/{blobName}', name: 'blob_delete', requirements: ['blobName' => '.+'], methods: ['POST'])]
+    public function delete(string $blobName, DeleteBlob $deleteBlob): RedirectResponse
+    {
+        try {
+            $deleteBlob($blobName);
+            $this->addFlash('success', 'Deleted: '.$blobName);
+        } catch (\Throwable $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('blob_index');
     }
 }
