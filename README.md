@@ -70,3 +70,9 @@ The upload form preserves the current prefix and stores the blob under:
 `<prefix>/<generated_id>_<filename>`
 
 If no prefix is provided, the file is uploaded at the root level.
+
+## Future improvements
+- File size validation
+- Pagination for large blob lists
+- Folder-like UI navigation
+- Unit tests
