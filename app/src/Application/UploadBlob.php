@@ -43,6 +43,9 @@ final readonly class UploadBlob
     {
         $prefix = trim($prefix, '/');
 
+        $id = uniqid('', false);
+        $name = $id . '_' . $name;
+
         if ('' === $prefix) {
             return $name;
         }
