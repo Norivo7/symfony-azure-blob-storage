@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Presentation\Controller;
@@ -8,13 +9,13 @@ use App\Application\DownloadBlob;
 use App\Application\ListBlobs;
 use App\Application\UploadBlob;
 use App\Domain\Storage\Exception\BlobNotFound;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class BlobController extends AbstractController
 {
@@ -29,6 +30,7 @@ final class BlobController extends AbstractController
 
             if (!$file instanceof UploadedFile) {
                 $this->addFlash('error', 'No file selected.');
+
                 return $this->redirectToRoute('blob_index', ['prefix' => $prefix]);
             }
 
@@ -64,14 +66,13 @@ final class BlobController extends AbstractController
         });
 
         $response->headers->set('Content-Type', $data['contentType']);
-        if ($data['contentLength'] !== null) {
+        if (null !== $data['contentLength']) {
             $response->headers->set('Content-Length', (string) $data['contentLength']);
         }
         $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($blobName).'"');
 
         return $response;
     }
-
 
     #[Route('/delete/{blobName}', name: 'blob_delete', requirements: ['blobName' => '.+'], methods: ['POST'])]
     public function delete(string $blobName, DeleteBlob $deleteBlob): RedirectResponse

@@ -90,11 +90,10 @@ final readonly class AzureBlobStorage implements BlobStorage
         try {
             $this->client->deleteBlob($this->container, $blobName);
         } catch (ServiceException $exception) {
-            if ($exception->getCode() === Response::HTTP_NOT_FOUND) {
+            if (Response::HTTP_NOT_FOUND === $exception->getCode()) {
                 throw new BlobNotFound("Blob not found: {$blobName}", 404, $exception);
             }
             throw $exception;
         }
     }
-
 }
