@@ -55,3 +55,13 @@ app/vendor/
 
 # Symfony env
 app/.env.local
+
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
+
+###> friendsofphp/php-cs-fixer ###
+app/.php-cs-fixer.php
+app/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
