@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Azure\Blob\Command;
@@ -29,10 +30,12 @@ final class InitBlobContainerCommand extends Command
         try {
             $this->client->getContainerProperties($this->container);
             $output->writeln(sprintf('<info>OK</info> Container exists: %s', $this->container));
+
             return Command::SUCCESS;
         } catch (ServiceException $e) {
-            if ($e->getCode() !== Response::HTTP_NOT_FOUND) {
+            if (Response::HTTP_NOT_FOUND !== $e->getCode()) {
                 $output->writeln('<error>'.$e->getMessage().'</error>');
+
                 return Command::FAILURE;
             }
         }

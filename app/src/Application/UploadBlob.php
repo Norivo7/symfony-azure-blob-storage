@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application;
@@ -9,7 +10,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final readonly class UploadBlob
 {
-    public function __construct(private BlobStorage $storage) {}
+    public function __construct(private BlobStorage $storage)
+    {
+    }
 
     public function __invoke(UploadedFile $file, string $prefix = ''): string
     {
@@ -32,17 +35,18 @@ final readonly class UploadBlob
     {
         $name = basename($name);
         $name = str_replace(' ', '-', $name);
-        return $name !== '' ? $name : 'file';
+
+        return '' !== $name ? $name : 'file';
     }
 
     private function buildBlobName(string $name, string $prefix): string
     {
         $prefix = trim($prefix, '/');
 
-        if ($prefix === '') {
+        if ('' === $prefix) {
             return $name;
         }
 
-        return $prefix . '/' . $name;
+        return $prefix.'/'.$name;
     }
 }

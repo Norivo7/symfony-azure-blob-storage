@@ -27,7 +27,7 @@ final readonly class AzureBlobStorage implements BlobStorage
         $options = new ListBlobsOptions();
         $options->setPrefix($prefix);
 
-        $result =$this->client->listBlobs($this->container, $options);
+        $result = $this->client->listBlobs($this->container, $options);
 
         $items = [];
         foreach ($result->getBlobs() as $blob) {
@@ -47,7 +47,7 @@ final readonly class AzureBlobStorage implements BlobStorage
     public function upload(string $blobName, string $localPath, string $contentType): void
     {
         $stream = @fopen($localPath, 'rb');
-        if ($stream === false) {
+        if (false === $stream) {
             throw new UploadFailed("Cannot open file: {$localPath}");
         }
 
@@ -57,7 +57,7 @@ final readonly class AzureBlobStorage implements BlobStorage
 
             $this->client->createBlockBlob($this->container, $blobName, $stream, $options);
         } catch (ServiceException $exception) {
-            throw new UploadFailed("Failed to upload blob: $blobName. Error: " . $exception->getMessage());
+            throw new UploadFailed("Failed to upload blob: $blobName. Error: ".$exception->getMessage());
         } finally {
             fclose($stream);
         }
@@ -68,7 +68,7 @@ final readonly class AzureBlobStorage implements BlobStorage
         try {
             $result = $this->client->getBlob($this->container, $blobName);
         } catch (ServiceException $exception) {
-            if ($exception->getCode() === Response::HTTP_NOT_FOUND) {
+            if (Response::HTTP_NOT_FOUND === $exception->getCode()) {
                 throw new BlobNotFound("Blob not found: {$blobName}", 404, $exception);
             }
             throw $exception;
@@ -81,6 +81,5 @@ final readonly class AzureBlobStorage implements BlobStorage
             'contentType' => $props?->getContentType() ?? 'application/octet-stream',
             'contentLength' => $props?->getContentLength(),
         ];
-
     }
 }

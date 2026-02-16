@@ -11,8 +11,9 @@ final readonly class AzureBlobClientFactory
     public function __construct(
         private string $accountName,
         private string $accountKey,
-        private string $blobEndpoint
-    ) { }
+        private string $blobEndpoint,
+    ) {
+    }
 
     public function create(): BlobRestProxy
     {
