@@ -6,7 +6,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": "^8.0",
+        "php": "^8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/doctrine-bundle": "^2.10",
@@ -62,7 +62,10 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "stan": "php -d memory_limit=1G vendor/bin/phpstan analyse -c phpstan.dist.neon",
+        "cs:check": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "cs:fix": "vendor/bin/php-cs-fixer fix"
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -75,6 +78,9 @@
         }
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.94",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-symfony": "^2.0",
         "symfony/maker-bundle": "^1.50",
         "symfony/stopwatch": "6.4.*",
         "symfony/web-profiler-bundle": "6.4.*"
