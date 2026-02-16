@@ -29,11 +29,12 @@ Switching to a real Azure account only requires updating the environment variabl
 ## Local setup (Docker + Azurite)
 
 ### 1) Configure environment
+Clone the repository and navigate to the project directory.
 Get Azure storage account key [from here](https://learn.microsoft.com/en-us/azure/storage/common/storage-connect-azurite?tabs=blob-storage) (starting  `Eby8vdM02x...`)
 
-Open `.env`, and set it in the `AZURE_STORAGE_ACCOUNT_KEY` variable
+Go to `app/`, Copy `.env` to a new `.env.local` and set the `AZURE_STORAGE_ACCOUNT_KEY` variable
 
-### 2) Run containers
+### 2) Build and run containers
 ```bash
 docker compose up -d --build
 ```
@@ -52,7 +53,7 @@ bin/console azure:blob:init
 ```
 
 ### 5) Access the app
-Open `http://localhost:8000` in your browser. You can upload files, list and delete blobs
+Open `http://localhost:8080` in your browser. You can upload files, list and delete blobs
 
 ### Notes
 
