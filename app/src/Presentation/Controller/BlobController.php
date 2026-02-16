@@ -19,7 +19,8 @@ final class BlobController extends AbstractController
     #[Route('/', name: 'blob_index', methods: ['GET', 'POST'])]
     public function index(Request $request, ListBlobs $listBlobs, UploadBlob $uploadBlob): Response
     {
-        $prefix = (string) $request->query->get('prefix', '');
+        $prefix = $request->get('prefix', '');
+        $prefix = trim($prefix);
 
         if ($request->isMethod('POST')) {
             $file = $request->files->get('file');
