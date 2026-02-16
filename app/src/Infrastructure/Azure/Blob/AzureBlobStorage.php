@@ -59,7 +59,9 @@ final readonly class AzureBlobStorage implements BlobStorage
         } catch (ServiceException $exception) {
             throw new UploadFailed("Failed to upload blob: $blobName. Error: ".$exception->getMessage());
         } finally {
-            fclose($stream);
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
         }
     }
 
