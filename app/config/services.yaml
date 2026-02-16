@@ -15,10 +15,31 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
-        exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    # Azure Blob Storage client configuration
+    App\Infrastructure\Azure\Blob\AzureBlobClientFactory:
+        arguments:
+            $accountName: '%env(AZURE_STORAGE_ACCOUNT)%'
+            $accountKey: '%env(AZURE_STORAGE_ACCESS_KEY)%'
+            $blobEndpoint: '%env(AZURE_STORAGE_BLOB_ENDPOINT)%'
+    
+    MicrosoftAzure\Storage\Blob\BlobRestProxy:
+        factory: ['@App\Infrastructure\Azure\Blob\AzureBlobClientFactory', create]
+            
+    App\Infrastructure\Azure\Blob\AzureBlobStorage:
+        arguments:
+            $client: '@MicrosoftAzure\Storage\Blob\BlobRestProxy'
+            $container: '%env(AZURE_STORAGE_CONTAINER)%'
+    
+    App\Domain\Storage\BlobStorage: '@App\Infrastructure\Azure\Blob\AzureBlobStorage'
+
+    App\Presentation\Controller\:
+        resource: '../src/Presentation/Controller/'
+        tags: ['controller.service_arguments']
+        
+    App\Infrastructure\Azure\Blob\Command\InitBlobContainerCommand:
+        arguments:
+            $container: '%env(AZURE_STORAGE_CONTAINER)%'
+
