@@ -71,10 +71,22 @@
                     {% for b in blobs %}
                         <tr>
                             <td class="mono">{{ b.name }}</td>
-                            <td class="right">{{ b.size ?? '-' }}</td>
+                            <td class="right">
+                                {% if b.size %}
+                                    {{ (b.size / 1024)|number_format(2, '.', ' ') }} KB
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
                             <td>{{ b.lastModified ? b.lastModified|date('Y-m-d H:i:s') : '-' }}</td>
                             <td class="actions">
                                 <a href="{{ path('blob_download', { blobName: b.name }) }}">⬇ Download</a>
+
+                                <form method="post" action="{{ path('blob_delete', { blobName: b.name }) }}" style="display:inline;">
+                                    <button class="btn btn-ghost" type="submit" style="margin-left:8px; border-color: rgba(239,68,68,0.35);">
+                                        Delete
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     {% else %}
