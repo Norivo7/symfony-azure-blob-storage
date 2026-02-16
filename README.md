@@ -14,11 +14,12 @@ This project uses **Azurite** for local development in order to avoid Azure subs
 
 Azurite is the official Azure Storage emulator and implements the same Blob Storage API surface used by the Azure SDK.
 
-Switching to a real Azure account only requires updating the environment variables:
+To connect to a real Azure Storage account, update the following environment variables:
 
 - `AZURE_STORAGE_ACCOUNT_NAME`
 - `AZURE_STORAGE_ACCOUNT_KEY`
 - `AZURE_STORAGE_BLOB_ENDPOINT`
+- `AZURE_STORAGE_CONTAINER`
 
 ## Architecture
 - `src/Domain` - storage contract and domain exceptions
