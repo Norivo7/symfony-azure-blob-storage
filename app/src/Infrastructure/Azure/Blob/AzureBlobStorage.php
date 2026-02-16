@@ -32,11 +32,11 @@ final readonly class AzureBlobStorage implements BlobStorage
         $items = [];
         foreach ($result->getBlobs() as $blob) {
             $props = $blob->getProperties();
-            $date = \DateTimeImmutable::createFromMutable($props?->getLastModified());
+            $date = \DateTimeImmutable::createFromMutable($props->getLastModified());
             $items[] = new BlobItem(
                 name: $blob->getName(),
                 size: $blob->getProperties()->getContentLength(),
-                contentType: $blob->getProperties()?->getContentType(),
+                contentType: $blob->getProperties()->getContentType(),
                 lastModified: $date
             );
         }
@@ -77,11 +77,16 @@ final readonly class AzureBlobStorage implements BlobStorage
         }
 
         $props = $result->getProperties();
+        $contentType = $props->getContentType();
+
+        if ('' === $contentType) {
+            $contentType = 'application/octet-stream';
+        }
 
         return [
             'stream' => $result->getContentStream(),
-            'contentType' => $props?->getContentType() ?? 'application/octet-stream',
-            'contentLength' => $props?->getContentLength(),
+            'contentType' => $contentType,
+            'contentLength' => $props->getContentLength(),
         ];
     }
 
